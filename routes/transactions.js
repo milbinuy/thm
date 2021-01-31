@@ -12,17 +12,17 @@ router.post('/debit', async function(req, res, next) {
   // Validate param
   if (!userId) {
     res.status(400);
-    res.send('Error: userid is required');
+    res.send('{"statusCode": 400, "result":"userid is required"}');
   }
 
   if (!amount) {
     res.status(400);
-    res.send('Error: amount is required');
+    res.send('{"statusCode": 400, "result":"amount is required"}');
   }
 
   if (amount<=0) {
     res.status(400);
-    res.send('Error: amount cannot be negative');
+    res.send('{"statusCode": 400, "result":"amount cannot be negative"}');
   }
 
   // Validate user
@@ -31,7 +31,7 @@ router.post('/debit', async function(req, res, next) {
 
   if (!doc.exists) {
     res.status(400);
-    res.send('Error: userid not found');
+    res.send('{"statusCode": 400, "result":"userid not found"}');
   }
 
   // Debit transaction
@@ -39,24 +39,15 @@ router.post('/debit', async function(req, res, next) {
 
   const transRef = db.collection('thm-transactions');
 
-  var m = new Date();
-  var dateString =
-    m.getUTCFullYear() + "/" +
-    ("0" + (m.getUTCMonth()+1)).slice(-2) + "/" +
-    ("0" + m.getUTCDate()).slice(-2) + " " +
-    ("0" + m.getUTCHours()).slice(-2) + ":" +
-    ("0" + m.getUTCMinutes()).slice(-2) + ":" +
-    ("0" + m.getUTCSeconds()).slice(-2);
-
   await transRef.add({
     action: "debit",
-    createdAt: dateString,
     amount,
+    createdAt: Date.now(),
     userId
   })
 
   res.status(200);
-  res.send('Debit transaction successful');
+  res.send('{"statusCode": 200, "result":"debit transaction successful"}');
 });
 
 /*  POST Credit Transaction  */
@@ -67,17 +58,17 @@ router.post('/credit', async function(req, res, next) {
     // Validate param
     if (!userId) {
       res.status(400);
-      res.send('Error: userid is required');
+      res.send('{"statusCode": 400, "result":"userid is required"}');
     }
   
     if (!amount) {
       res.status(400);
-      res.send('Error: amount is required');
+      res.send('{"statusCode": 400, "result":"amount is required"}');
     }
   
     if (amount<=0) {
       res.status(400);
-      res.send('Error: amount cannot be negative');
+      res.send('{"statusCode": 400, "result":"amount cannot be negative"}');
     }
   
     // Validate user
@@ -86,38 +77,28 @@ router.post('/credit', async function(req, res, next) {
 
     if (!doc.exists) {
       res.status(400);
-      res.send('Error: userid not found');
+      res.send('{"statusCode": 400, "result":"userid not found"}');
     }
 
     // Credit transaction
     if (doc.data().balance < amount) {
       res.status(400);
-      res.send('Credit transaction failed: Insufficient balance');
+      res.send('{"statusCode": 400, "result":"credit transaction failed insufficient balance"}');
     }
-
     else {
       await userRef.update({balance: doc.data().balance - amount});
 
       const transRef = db.collection('thm-transactions');
 
-      var m = new Date();
-      var dateString =
-        m.getUTCFullYear() + "/" +
-        ("0" + (m.getUTCMonth()+1)).slice(-2) + "/" +
-        ("0" + m.getUTCDate()).slice(-2) + " " +
-        ("0" + m.getUTCHours()).slice(-2) + ":" +
-        ("0" + m.getUTCMinutes()).slice(-2) + ":" +
-        ("0" + m.getUTCSeconds()).slice(-2);
-
       await transRef.add({
         action: "credit",
-        createdAt: dateString,
         amount,
+        createdAt: Date.now(),
         userId
       })
 
       res.status(200);
-      res.send('Credit transaction successful');
+      res.send('{"statusCode": 200, "result":"credit transaction successful"}');
     }
   });
 
