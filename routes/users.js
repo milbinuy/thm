@@ -8,11 +8,13 @@ var router = express.Router();
 router.get('/balance', async function(req, res, next) {
   const userid = req.query.userid;
   
+  // Validate param
   if (!userid) {
     res.status(400);
     res.send('Error: userid is required');
   }
 
+  // Validate user
   const userref = db.collection('thm-users').doc(userid);
   const doc = await userref.get();
 
@@ -21,11 +23,13 @@ router.get('/balance', async function(req, res, next) {
     res.send('Error: userid not found');
   }
 
+  // Get balance info
   const transref = db.collection('thm-transactions');
   let transactions = [];
   const transdoc = await (await transref.where('userId', '==', userid).get()).forEach(t => transactions.push(t.data()));
 
-  res.send('{"name":' + JSON.stringify(doc.data().name) + ', "balance":' + JSON.stringify(doc.data().balance) + ', "transactionHistory":'+ JSON.stringify(transactions) + '}');
+  res.send('{"name":' + JSON.stringify(doc.data().name) + ', "balance":' + JSON.stringify(doc.data().balance) + 
+            ', "transactionHistory":'+ JSON.stringify(transactions) + '}');
 });
 
 module.exports = router;

@@ -1,6 +1,6 @@
 // setup configuration to firebase
 const admin = require('firebase-admin');
-const serviceAccount = require('C:/Users/T180/Downloads/bayadcenter-take-home-exam-firebase-adminsdk-cwbx7-1e7c173b87.json');
+const serviceAccount = require('C:/Users/melvin.g.uy/Downloads/bayadcenter-take-home-exam-firebase-adminsdk-cwbx7-1e7c173b87.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
