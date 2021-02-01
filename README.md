@@ -2,12 +2,12 @@
 
 ## GET balance
 
-    get('/balance', async function(req, res, next)
+    /balance
 
 ###### Description 
 - Get balance and transaction
 
-###### Parameters 
+###### Query Parameters 
 - userId - id of user
 
 ###### What the function returns
@@ -15,12 +15,12 @@
 
 ## POST debit
 
-    post('/debit', async function(req, res, next)
+    /debit
 
 ###### Description 
 - Perform debit transaction
 
-###### Parameters 
+###### Request Body 
 - userId - id of user
 - amount - amount of debit
 
@@ -29,12 +29,12 @@
 
 ## POST credit
 
-    post('/credit', async function(req, res, next)
+    /credit
 
 ###### Description 
 - Perform credit transaction
 
-###### Parameters 
+###### Request Body 
 - userId - id of user
 - amount - amount of credit
 
